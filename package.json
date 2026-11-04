@@ -1,0 +1,58 @@
+{
+  "name": "@mobyuz/moby-ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The animated Moby face and shared React components",
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mobyuz/moby-ui.git"
+  },
+  "engines": { "node": "24.13.0", "npm": "11.6.2" },
+  "packageManager": "npm@11.6.2",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "CHANGELOG.md", "LICENSE"],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:a11y": "vitest run tests/a11y.test.tsx",
+    "preview:build": "vite build --config vite.preview.config.ts",
+    "preview": "vite preview --config vite.preview.config.ts --host 127.0.0.1"
+  },
+  "peerDependencies": {
+    "@mobyuz/moby-protocol": ">=0.1.0 <1.0.0",
+    "react": ">=18.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@mobyuz/moby-protocol": "file:../moby-protocol",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "24.10.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.2.1",
+    "axe-core": "4.14.0",
+    "eslint": "10.14.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.14.0",
+    "jsdom": "29.1.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.1",
+    "vite": "8.3.5",
+    "vitest": "5.1.0"
+  }
+}
