@@ -1,0 +1,390 @@
+/*
+ * Styles for <MobyFace>. Everything is scoped to the `.moby-face` class and
+ * `moby-face-*` names, so importing this file changes nothing else on the page.
+ *
+ * Theme tokens. The library never declares these itself, so any ancestor (or the
+ * face's own `className`) can set them. Each one has a built-in default:
+ *
+ *   --moby-face-screen          OLED background (black in both themes, like the robot)
+ *   --moby-face-bezel           outline around the screen (light and dark default)
+ *   --moby-face-warning         slash through the mic and the broken link
+ *   --moby-face-glow            glow radius around the drawing, default 5px
+ *   --moby-face-mood-<name>     feature colour per expression: idle, listening,
+ *                               thinking, speaking, happy, confused, error,
+ *                               muted, disconnected
+ *
+ * Needs a browser with light-dark() and @property: Chromium 123, Firefox 120, Safari 17.5.
+ */
+
+@property --moby-face-current {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+.moby-face {
+  display: block;
+  flex: none;
+  height: auto;
+  overflow: visible;
+  color-scheme: light dark;
+  transition: --moby-face-current 0.5s ease;
+}
+
+.moby-face[data-theme="light"] {
+  color-scheme: light;
+}
+
+.moby-face[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+.moby-face[data-expression="idle"] {
+  --moby-face-current: var(--moby-face-mood-idle, #ffffff);
+}
+
+.moby-face[data-expression="listening"] {
+  --moby-face-current: var(--moby-face-mood-listening, #fb7185);
+}
+
+.moby-face[data-expression="thinking"] {
+  --moby-face-current: var(--moby-face-mood-thinking, #c4b5fd);
+}
+
+.moby-face[data-expression="speaking"] {
+  --moby-face-current: var(--moby-face-mood-speaking, #7dd3fc);
+}
+
+.moby-face[data-expression="happy"] {
+  --moby-face-current: var(--moby-face-mood-happy, #6ee7b7);
+}
+
+.moby-face[data-expression="confused"] {
+  --moby-face-current: var(--moby-face-mood-confused, #fcd34d);
+}
+
+.moby-face[data-expression="error"] {
+  --moby-face-current: var(--moby-face-mood-error, #f87171);
+}
+
+.moby-face[data-expression="muted"] {
+  --moby-face-current: var(--moby-face-mood-muted, #a1a1aa);
+}
+
+.moby-face[data-expression="disconnected"] {
+  --moby-face-current: var(--moby-face-mood-disconnected, #71717a);
+}
+
+.moby-face__screen {
+  fill: var(--moby-face-screen, #000000);
+  stroke: var(--moby-face-bezel, light-dark(#d4d4d8, #2b2b2b));
+  stroke-width: 2;
+}
+
+.moby-face__face {
+  filter: drop-shadow(0 0 var(--moby-face-glow, 5px) var(--moby-face-current));
+}
+
+.moby-face__eye,
+.moby-face__dot,
+.moby-face__bar {
+  fill: var(--moby-face-current);
+}
+
+.moby-face__eye--outline {
+  fill: none;
+  stroke: var(--moby-face-current);
+  stroke-width: 4;
+  stroke-dasharray: 6 8;
+}
+
+.moby-face__stroke,
+.moby-face__slash,
+.moby-face__ring {
+  fill: none;
+  stroke: var(--moby-face-current);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.moby-face__stroke--thin {
+  stroke-width: 4;
+}
+
+.moby-face__slash {
+  stroke: var(--moby-face-warning, #f43f5e);
+  stroke-width: 5;
+}
+
+.moby-face__ring {
+  stroke-width: 3;
+  opacity: 0.55;
+}
+
+.moby-face__mark {
+  fill: var(--moby-face-current);
+  font-family: system-ui, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.moby-face__eye--tilted {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-14deg);
+}
+
+/* Animations: one distinct motion per expression */
+
+.moby-face__eyes,
+.moby-face__dots,
+.moby-face__bars,
+.moby-face__face,
+.moby-face__mic,
+.moby-face__link,
+.moby-face__ring,
+.moby-face__mark,
+.moby-face__eye,
+.moby-face__bar,
+.moby-face__dot {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.moby-face[data-animation="blink"] .moby-face__eyes {
+  animation: moby-face-blink 4.2s ease-in-out infinite;
+}
+
+.moby-face[data-animation="pulse"] .moby-face__eyes {
+  animation: moby-face-eye-pulse 1.1s ease-in-out infinite;
+}
+
+.moby-face[data-animation="pulse"] .moby-face__ring {
+  animation: moby-face-ring-pulse 1.1s ease-in-out infinite;
+}
+
+.moby-face[data-animation="orbit"] .moby-face__eyes {
+  animation: moby-face-look-around 2.4s ease-in-out infinite;
+}
+
+.moby-face[data-animation="orbit"] .moby-face__dot {
+  animation: moby-face-dot-hop 1.2s ease-in-out infinite;
+}
+
+.moby-face[data-animation="orbit"] .moby-face__dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.moby-face[data-animation="orbit"] .moby-face__dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.moby-face[data-animation="talk"] .moby-face__bar {
+  animation: moby-face-talk 0.7s ease-in-out infinite;
+}
+
+.moby-face[data-animation="talk"] .moby-face__bar:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.moby-face[data-animation="talk"] .moby-face__bar:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.moby-face[data-animation="talk"] .moby-face__bar:nth-child(4) {
+  animation-delay: 0.36s;
+}
+
+.moby-face[data-animation="talk"] .moby-face__bar:nth-child(5) {
+  animation-delay: 0.48s;
+}
+
+.moby-face[data-animation="bounce"] .moby-face__face {
+  animation: moby-face-bounce 0.8s ease-in-out infinite;
+}
+
+.moby-face[data-animation="wobble"] .moby-face__eyes,
+.moby-face[data-animation="wobble"] .moby-face__eye--tilted {
+  animation: moby-face-wobble 1.6s ease-in-out infinite;
+}
+
+.moby-face[data-animation="wobble"] .moby-face__mark {
+  animation: moby-face-mark-bob 1.6s ease-in-out infinite;
+}
+
+.moby-face[data-animation="shake"] .moby-face__face {
+  animation: moby-face-shake 0.45s linear infinite;
+}
+
+.moby-face[data-animation="breathe"] .moby-face__eyes {
+  animation: moby-face-breathe 3.6s ease-in-out infinite;
+}
+
+.moby-face[data-animation="breathe"] .moby-face__mic {
+  animation: moby-face-breathe 3.6s ease-in-out infinite reverse;
+}
+
+.moby-face[data-animation="flicker"] .moby-face__eyes,
+.moby-face[data-animation="flicker"] .moby-face__link {
+  animation: moby-face-flicker 2.2s steps(1, end) infinite;
+}
+
+@keyframes moby-face-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes moby-face-eye-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes moby-face-ring-pulse {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+@keyframes moby-face-look-around {
+  0%,
+  100% {
+    transform: translateX(-6px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes moby-face-dot-hop {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+@keyframes moby-face-talk {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1.25);
+  }
+}
+
+@keyframes moby-face-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes moby-face-wobble {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes moby-face-mark-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(8deg);
+  }
+}
+
+@keyframes moby-face-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes moby-face-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes moby-face-flicker {
+  0%,
+  60% {
+    opacity: 1;
+  }
+  64% {
+    opacity: 0.15;
+  }
+  70% {
+    opacity: 0.8;
+  }
+  74% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/*
+ * Reduced motion. The `reducedMotion` prop sets data-motion: "reduced" always
+ * stops motion, "full" always keeps it, and "auto" follows the system setting.
+ * Each expression stays visually distinct without motion.
+ */
+
+@media (prefers-reduced-motion: reduce) {
+  .moby-face[data-motion="auto"],
+  .moby-face[data-motion="auto"] * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.moby-face[data-motion="reduced"],
+.moby-face[data-motion="reduced"] * {
+  animation: none !important;
+  transition: none !important;
+}
