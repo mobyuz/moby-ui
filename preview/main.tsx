@@ -15,7 +15,7 @@ function Preview() {
   return (
     <main className="page" data-theme={theme}>
       <h1>Moby face</h1>
-      <p className="note">Every expression from moby-protocol, drawn by the built component.</p>
+      <p className="note">Every expression from moby-protocol, drawn by the component source in src/.</p>
       <div className="controls">
         <label>
           Theme{" "}
