@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: moby-ui
+          persist-credentials: false
+      # The protocol package is not published yet, so build it from its main branch
+      # next to this checkout. Replace with a pinned @mobyuz/moby-protocol version
+      # once the first release exists (see docs/adr/0001-face-package.md).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: mobyuz/moby-protocol
+          ref: main
+          path: moby-protocol
+          token: ${{ secrets.MOBY_PROTOCOL_READ_TOKEN }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: moby-ui/.node-version
+      - run: npm install --global npm@11.6.2
+      - name: Build moby-protocol
+        working-directory: moby-protocol
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build
+      - name: Install dependencies
+        working-directory: moby-ui
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Lint
+        working-directory: moby-ui
+        run: npm run lint
+      - name: Types
+        working-directory: moby-ui
+        run: npm run typecheck
+      - name: Component tests
+        working-directory: moby-ui
+        run: npm test -- --exclude tests/a11y.test.tsx
+      - name: Accessibility
+        working-directory: moby-ui
+        run: npm run test:a11y
+      - name: Build and check the package contents
+        working-directory: moby-ui
+        run: |
+          npm run build
+          npm pack --dry-run
+      - name: Build the preview page
+        working-directory: moby-ui
+        run: npm run preview:build
