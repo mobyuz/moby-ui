@@ -25,6 +25,8 @@ Import `styles.css` once. It only touches `.moby-face`, `moby-face-*` keyframes,
 | `theme` | `auto` (system), `light`, or `dark`. |
 | `className` | Extra class on the `<svg>`. |
 
+Optional: `import "@mobyuz/moby-ui/mood.css";` makes `--moby-mood` (the current mood colour) available on any element with a `data-expression` attribute, for example to tint a page background from the same colours as the face. It follows the `--moby-face-mood-*` tokens and does not need `styles.css`.
+
 Also exported: `EXPRESSION_META` (label, status text, and motion per expression), `FACE_EXPRESSIONS`, and `isExpression`.
 
 ### Theming

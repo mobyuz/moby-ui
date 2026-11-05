@@ -5,6 +5,12 @@ All notable changes to this package. The version stays 0.x and the package stays
 
 ## [Unreleased]
 
+### Added
+
+- `mood.css` (`@mobyuz/moby-ui/mood.css`): `--moby-mood` on any `[data-expression]`
+  element, with the face's mood colours, for apps that tint their background from
+  the expression.
+
 ## [0.1.0] - 2026-11-05
 
 ### Added

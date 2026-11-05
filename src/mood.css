@@ -1,0 +1,62 @@
+/*
+ * Optional companion to styles.css: exposes the current expression's mood colour as
+ * `--moby-mood` on ANY element that has a `data-expression` attribute, so an app can
+ * tint a page background or a glow from the same colours the face uses. The face
+ * itself does not need this file.
+ *
+ * The values are the face's defaults and follow the same `--moby-face-mood-<name>`
+ * tokens, so setting a token on an ancestor changes both. `--moby-mood` animates
+ * between expressions over 0.5s unless the user prefers reduced motion.
+ */
+
+@property --moby-mood {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+[data-expression] {
+  transition: --moby-mood 0.5s ease;
+}
+
+[data-expression="idle"] {
+  --moby-mood: var(--moby-face-mood-idle, #ffffff);
+}
+
+[data-expression="listening"] {
+  --moby-mood: var(--moby-face-mood-listening, #fb7185);
+}
+
+[data-expression="thinking"] {
+  --moby-mood: var(--moby-face-mood-thinking, #c4b5fd);
+}
+
+[data-expression="speaking"] {
+  --moby-mood: var(--moby-face-mood-speaking, #7dd3fc);
+}
+
+[data-expression="happy"] {
+  --moby-mood: var(--moby-face-mood-happy, #6ee7b7);
+}
+
+[data-expression="confused"] {
+  --moby-mood: var(--moby-face-mood-confused, #fcd34d);
+}
+
+[data-expression="error"] {
+  --moby-mood: var(--moby-face-mood-error, #f87171);
+}
+
+[data-expression="muted"] {
+  --moby-mood: var(--moby-face-mood-muted, #a1a1aa);
+}
+
+[data-expression="disconnected"] {
+  --moby-mood: var(--moby-face-mood-disconnected, #71717a);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-expression] {
+    transition: none;
+  }
+}

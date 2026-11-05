@@ -18,11 +18,12 @@
   "exports": {
     ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
     "./styles.css": "./dist/styles.css",
+    "./mood.css": "./dist/mood.css",
     "./package.json": "./package.json"
   },
   "files": ["dist", "CHANGELOG.md", "LICENSE"],
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "build": "vite build && tsc -p tsconfig.build.json && node scripts/copy-mood.mjs",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
